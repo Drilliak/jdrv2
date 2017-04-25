@@ -1,0 +1,4 @@
+jdr_core_home:
+    path: /accueil
+    defaults:
+        _controller: JDRCoreBundle:Core:index

@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle;
+namespace JDR\CoreBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AppBundle extends Bundle
+class JDRCoreBundle extends Bundle
 {
 }

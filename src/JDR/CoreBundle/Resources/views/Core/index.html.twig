@@ -1,0 +1,22 @@
+{% extends "JDRCoreBundle::layout.html.twig" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block stylesheets%}
+    {{ parent() }}
+    <link href="{{ asset('css/JDR/CoreBundle/Core/index.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+    <header>
+        <div id="dataConnection">
+            <p>Connecté en tant que {{ app.user.username }}</p>
+            <a href ="{{ path('fos_user_security_logout') }}">Déconnexion</a>
+        </div>
+    </header>
+
+    <div>
+        <button>Créer une nouvelle partie</button>
+    </div>
+
+{% endblock %}

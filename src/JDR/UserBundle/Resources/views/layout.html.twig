@@ -1,0 +1,30 @@
+{# src/JDR/UserBundle/Resources/view/layout.html.twig#}
+
+{# layout général des pages du bundle User #}
+
+<!DOCTYPE>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset ="utf-8" />
+        {% block stylesheets %}
+        {% endblock %}
+    </head>
+
+    <body>
+    {# On affiche les messages flash que définissent les contrôleurs du bundle #}
+    {% for key, messages in app.session.flashbag.all() %}
+        {% for message in messages %}
+            <div class="alert alert-{{ key }}">
+                {{ message|trans({}, 'FOSUserBundle') }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+        <div>
+            {% block fos_user_content %}
+            {% endblock  %}
+        </div>
+    </body>
+</html>
+
