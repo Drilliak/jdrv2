@@ -1,4 +1,14 @@
 jdr_core_home:
+    path: /
+    defaults:
+        _controller: JDRCoreBundle:Core:index
+
+jdr_core_home:
     path: /accueil
     defaults:
         _controller: JDRCoreBundle:Core:index
+
+jdr_core_session_creation:
+    path: /creation-partie
+    defaults:
+        _controller: JDRCoreBundle:Session:createSession

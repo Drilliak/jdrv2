@@ -1,9 +1,8 @@
-header{
-    display:flex;
-    justify-content: flex-end;
-}
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
 
-#dataConnection p{
-    margin-top: 5px;
-    margin-bottom:5px;
+    text-decoration: none;
+    color: initial;
 }

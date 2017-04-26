@@ -65,10 +65,18 @@ class PlayerCharacter
     private $spells;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JDR\UserBundle\Entity\User", inversedBy="characters")
+     * @var string
+     * @ORM\Column(name="username", type="string", length=255)
      * @ORM\JoinColumn(nullable=false)
+     *
      */
-    private $user;
+    private $username;
+
+    /**
+     * @var string
+     * @ORM\Column(name="backstory", type="text", nullable=true)
+     */
+    private $backStory;
 
 
     /**
@@ -227,23 +235,50 @@ class PlayerCharacter
 
 
     /**
-     * Set user
+     * Set username
      *
-     * @param $user
+     * @param string $username
      *
-     * @return User
+     * @return PlayerCharacter
      */
-    public function setUser($user){
-        $this->user = $user;
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
 
     /**
-     * Get user
+     * Set backStory
      *
-     * @return User
+     * @param string $backStory
+     *
+     * @return PlayerCharacter
      */
-    public function getUser(){
-        return $this->user;
+    public function setBackStory($backStory)
+    {
+        $this->backStory = $backStory;
+
+        return $this;
+    }
+
+    /**
+     * Get backStory
+     *
+     * @return string
+     */
+    public function getBackStory()
+    {
+        return $this->backStory;
     }
 }

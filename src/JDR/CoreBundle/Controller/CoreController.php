@@ -9,11 +9,12 @@ use JDR\CoreBundle\Entity\PlayerCharacter;
 
 class CoreController extends Controller
 {
+    /**
+     * Page principale où l'utilisateur arrive après la connexion
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction(){
-
-
-        
-
-        return $this->render("JDRCoreBundle:Core:index.html.twig", array("coucou" => "salut ducon"));
+        return $this->render("JDRCoreBundle:Core:index.html.twig");
     }
 }

@@ -5,11 +5,15 @@ namespace JDR\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="JDR\UserBundle\Repository\UserRepository")
+ * @UniqueEntity("email")
+ * @UniqueEntity("username")
  */
 class User extends BaseUser
 {
@@ -22,11 +26,6 @@ class User extends BaseUser
      */
     protected $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity="JDR\CoreBundle\Entity\PlayerCharacter", mappedBy="user")
-     */
-    private $characters;
-
 
     /**
      * Get id
@@ -38,37 +37,4 @@ class User extends BaseUser
         return $this->id;
     }
 
-    /**
-     * Add character
-     *
-     * @param \JDR\CoreBundle\Entity\PlayerCharacter $character
-     *
-     * @return User
-     */
-    public function addCharacter(\JDR\CoreBundle\Entity\PlayerCharacter $character)
-    {
-        $this->characters[] = $character;
-
-        return $this;
-    }
-
-    /**
-     * Remove character
-     *
-     * @param \JDR\CoreBundle\Entity\PlayerCharacter $character
-     */
-    public function removeCharacter(\JDR\CoreBundle\Entity\PlayerCharacter $character)
-    {
-        $this->characters->removeElement($character);
-    }
-
-    /**
-     * Get characters
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCharacters()
-    {
-        return $this->characters;
-    }
 }

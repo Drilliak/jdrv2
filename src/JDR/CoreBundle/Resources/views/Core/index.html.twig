@@ -7,17 +7,13 @@
     <link href="{{ asset('css/JDR/CoreBundle/Core/index.css') }}" rel="stylesheet" />
 {% endblock %}
 
+{% block header %}{{ parent() }}{% endblock %}
+
 {% block body %}
-    <header>
-        <div id="dataConnection">
-            <p>Connecté en tant que {{ app.user.username }}</p>
-            <a href ="{{ path('fos_user_security_logout') }}">Déconnexion</a>
-        </div>
-    </header>
 
     <div>
-        <button>Créer une nouvelle partie</button>
-        {{ coucou }}
+        <a href="{{ path('jdr_core_session_creation') }}" class ="button">Créer une nouvelle partie</a>
     </div>
+
 
 {% endblock %}

@@ -1,0 +1,36 @@
+{% extends "JDRCoreBundle::layout.html.twig" %}
+
+{% block title %}Création de partie{% endblock %}
+
+{% block stylesheets%}
+    {{ parent() }}
+    <link href="{{ asset('css/JDR/CoreBundle/Session/sessioncreation.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/tags-input/jquery.tagsinput.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block header %}{{ parent() }}{% endblock %}
+{% block body %}
+    <form action="{{ path('jdr_core_session_creation') }}" method="post">
+        <div id="#form">
+            <p>
+                <label for="gamename">Nom de la partie</label>
+                <input type="text" id="gamename" name="_gamename" required="required" />
+            </p>
+            <p>
+                <label for="allowedstats">Caractéristiques autorisées</label>
+                 <input type="text" id="allowedstats" name="_allowedstats" required="required" value="pv,pv max, mana, mana max,"/>
+            </p>
+            <input type="submit" id="_submit" name="_submit" value="Créer la partie" />
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block javaacript %}
+    {{ parent() }}
+    <script src="{{ asset('js/tags-input/jquery.tagsinput.js') }}"></script>
+    <script>
+        $('#allowedstats').tagsInput();
+    </script>
+{% endblock %}
