@@ -15,6 +15,9 @@ class CoreController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(){
+
+        $repository = $this->getDoctrine()->getManager()->getRepository("JDRCoreBundle:Session");
+        
         return $this->render("JDRCoreBundle:Core:index.html.twig");
     }
 }

@@ -30,16 +30,17 @@ class Session
     private $name;
 
 
+
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="JDR\UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="JDR\UserBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $gameMaster;
 
     /**
      * @ORM\ManyToMany(targetEntity="JDR\UserBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $users;
 
