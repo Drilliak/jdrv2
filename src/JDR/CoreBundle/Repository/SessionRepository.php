@@ -2,6 +2,10 @@
 
 namespace JDR\CoreBundle\Repository;
 
+use Doctrine\DBAL\Query\QueryException;
+use JDR\CoreBundle\Entity\Session;
+use JDR\UserBundle\Entity\User;
+
 /**
  * SessionRepository
  *
@@ -10,4 +14,79 @@ namespace JDR\CoreBundle\Repository;
  */
 class SessionRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * Renvoie les sessions dont le mj a l'id $idGM
+     *
+     * @param $idGm id du maitre du jeu
+     * @param array|null $parameters tableau des champs de la session a récupérer. Si le tableau n'est pas spécifié
+     * (ou égal à null), renvoie tous les champs
+     * @return array contenant les sessions
+     */
+    public function selectSessionAsGm($idGm, array $parameters = null)
+    {
+        // Si aucun paramètre n'est rentré, on retourne toute la ligne
+        if ($parameters == null) {
+            $query = $this->_em->createQuery("SELECT s FROM JDRCoreBundle:Session s JOIN s.gameMaster g WHERE g.id = :id");
+            $query->setParameter('id', $idGm);
+        } else {
+            $strQuery = "SELECT ";
+            for ($i = 0; $i < count($parameters); $i++) {
+                if ($i == count($parameters) - 1) {
+                    $strQuery .= 's.' . $parameters[$i] . ' ';
+                } else {
+                    $strQuery .= 's.' . $parameters[$i] . ', ';
+                }
+
+            }
+            $strQuery .= " FROM JDRCoreBundle:Session s JOIN s.gameMaster g WHERE g.id = :id";
+
+            $query = $this->_em->createQuery($strQuery);
+            $query->setParameter('id', $idGm);
+        }
+
+        return $query->getResult();
+
+    }
+
+    public function selectGM($sessionId)
+    {
+        $query = $this->_em->createQuery("SELECT s FROM JDRCoreBundle:Session s WHERE s.id = :id");
+        $query->setParameter('id', $sessionId);
+
+        $sessions = $query->getResult();
+        if (count($sessions) == 1) {
+            return $sessions[0]->getGameMaster();
+        }
+        return new User();
+
+    }
+
+    public function selectSession($sessionID, array $parameters = null)
+    {
+        if ($parameters == null) {
+            $query = $this->_em->createQuery("SELECT s FROM JDRCoreBundle:Session s WHERE s.id = :id");
+            $query->setParameter('id', $sessionID);
+        } else {
+            $strQuery = "SELECT ";
+            for ($i = 0; $i < count($parameters); $i++) {
+                if ($i == count($parameters) - 1) {
+                    $strQuery .= 's.' . $parameters[$i] . ' ';
+                } else {
+                    $strQuery .= 's.' . $parameters[$i] . ', ';
+                }
+
+            }
+            $strQuery .= " FROM JDRCoreBundle:Session s WHERE s.id = :id";
+
+            $query = $this->_em->createQuery($strQuery);
+            $query->setParameter('id', $sessionID);
+        }
+
+        return $query->getResult()[0];
+    }
+
+    public function findNameSessionAsPlayer($idPlayer)
+    {
+    }
 }

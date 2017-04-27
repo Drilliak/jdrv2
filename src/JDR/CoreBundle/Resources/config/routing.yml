@@ -1,9 +1,4 @@
 jdr_core_home:
-    path: /
-    defaults:
-        _controller: JDRCoreBundle:Core:index
-
-jdr_core_home:
     path: /accueil
     defaults:
         _controller: JDRCoreBundle:Core:index
@@ -12,3 +7,14 @@ jdr_core_session_creation:
     path: /creation-partie
     defaults:
         _controller: JDRCoreBundle:Session:createSession
+
+jdr_core_game_edition:
+    path: /partie/mj/{id}
+    defaults:
+        _controller: JDRCoreBundle:Session:editSession
+
+jdr_core_ajax_username:
+    path: /ajax/username
+    defaults:
+        _controller: JDRCoreBundle:Core:username
+        methods: [post]

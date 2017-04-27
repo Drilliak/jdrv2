@@ -10,4 +10,15 @@ namespace JDR\UserBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function selectSimilarName($term)
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('u.username')
+            ->from($this->_entityName, 'u')
+            ->where('u.username LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

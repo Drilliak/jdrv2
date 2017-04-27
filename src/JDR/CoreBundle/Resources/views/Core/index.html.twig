@@ -2,9 +2,9 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block stylesheets%}
+{% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('css/JDR/CoreBundle/Core/index.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/JDR/CoreBundle/Core/index.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block header %}{{ parent() }}{% endblock %}
@@ -12,17 +12,22 @@
 {% block body %}
 
     <div>
-        <a href="{{ path('jdr_core_session_creation') }}" class ="button">Créer une nouvelle partie</a>
+        <a href="{{ path('jdr_core_session_creation') }}" class="button">Créer une nouvelle partie</a>
     </div>
 
     <div id="mygames">
         <h2>Parties en cours</h2>
         <div id="asgamemaster">
-            <h2>En tant que maître de jeu</h2>
+            <h3>En tant que maître de jeu</h3>
+            <ul>
+                {% for game in gameAsGm %}
+                    <li><a href="{{ path('jdr_core_game_edition', {'id': game.id}) }}">{{ game.name }}</a></li>
+                {% endfor %}
+            </ul>
 
         </div>
         <div id="asplayer">
-            <h2>En tant que joueur</h2>
+            <h3>En tant que joueur</h3>
         </div>
     </div>
 

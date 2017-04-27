@@ -1,0 +1,22 @@
+{% extends "JDRCoreBundle::layout.html.twig" %}
+
+{% block title %}Édition de la partie {% endblock %}
+
+
+{% block body %}
+    <h2>Partie {{ name }}</h2>
+
+    <h3>Caractéristiques autorisées</h3>
+    <ul>
+        {% for allowedStat in allowedStats %}
+            <li>{{ allowedStat }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Participants</h3>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.name }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

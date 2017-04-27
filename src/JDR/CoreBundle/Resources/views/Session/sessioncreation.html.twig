@@ -6,6 +6,7 @@
     {{ parent() }}
     <link href="{{ asset('css/JDR/CoreBundle/Session/sessioncreation.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/tags-input/jquery.tagsinput.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet" />
 {% endblock %}
 
 
@@ -21,6 +22,11 @@
                 <label for="allowedstats">Caractéristiques autorisées</label>
                  <input type="text" id="allowedstats" name="_allowedstats" required="required" value="pv,pv max, mana, mana max,"/>
             </p>
+            <p>
+                <label for="users">Joueurs</label>
+                <div id ="players"></div>
+                <input type="text" id="users" name="_users" />
+            </p>
             <input type="submit" id="_submit" name="_submit" value="Créer la partie" />
         </div>
     </form>
@@ -30,7 +36,13 @@
 {% block javaacript %}
     {{ parent() }}
     <script src="{{ asset('js/tags-input/jquery.tagsinput.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script>
         $('#allowedstats').tagsInput();
+    </script>
+    <script>
+        $("#users").autocomplete({
+            source : "{{ path('jdr_core_ajax_username') }}"
+        });
     </script>
 {% endblock %}
