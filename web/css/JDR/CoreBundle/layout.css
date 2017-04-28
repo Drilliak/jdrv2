@@ -1,0 +1,72 @@
+body
+{
+    background-image: url("../../../img/wallpaper_v2.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    font: 1.1em sans-serif;
+    color: #ecf0f1;
+    text-shadow: 1px 1px #2c3e50;
+
+}
+
+header
+{
+    font: 1.1em sans-serif;
+}
+#mainMenu
+{
+    font: 1.1em sans-serif;
+    height: 100px;
+}
+#horizontalMenu{
+    display: table;
+    width: 500px;
+    margin: 100px auto;
+    padding: 0;
+    background: linear-gradient(#2ecc71, #1E824C);
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3),
+    0 3px 5px rgba(0, 0, 0, .2),
+    0 5px 10px rgba(0, 0, 0, .2),
+    0 20px 20px rgba(0, 0, 0, .15);
+}
+#horizontalMenu li
+{
+    display: table-cell;
+}
+#horizontalMenu li a{
+    display: block;
+    text-align: center;
+    color: rgba(0, 0, 0, .7);
+    text-decoration: none;
+    padding: 8px 8px 10px 8px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .4);
+    box-shadow: 0 1px 0 rgba(30, 130, 76, .7) inset,
+    0 -1px 0 hsl(148, 63%, 10%) inset,
+    0 -2px 0 hsl(148, 63%, 15%) inset,
+    0 -3px 0 hsl(148, 63%, 20%) inset,
+    0 -4px 0 hsl(148, 63%, 25%) inset,
+    0 -5px 0 hsl(148, 63%, 31%) inset;
+    transition: padding .3s;
+}
+#horizontalMenu li:first-child a{
+    border-radius: 3px 0 0 3px;
+}
+#horizontalMenu li:last-child a{
+    border-radius: 0 3px 3px 0;
+}
+#horizontalMenu li a:hover,
+#horizontalMenu li a:focus{
+    background: rgba(255,255,255,.2);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .7) inset,
+    0 -1px 0 hsl(148, 63%, 10%) inset,
+    0 -2px 0 hsl(148, 63%, 12%) inset,
+    0 -3px 0 hsl(148, 63%, 20%) inset,
+    0 -4px 0 hsl(148, 63%, 25%) inset,
+    0 -5px 0 hsl(148, 63%, 31%) inset;
+    padding: 8px 25px 10px 25px;
+}
+#horizontalMenu li a:active{
+    background: linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.1));
+    box-shadow: 0 0 2px rgba(0,0,0,.3) inset;
+}

@@ -14,9 +14,15 @@
         {% block header %}
             <header>
                 <div id="mainMenu">
-                    <ul>
+                    <ul id="horizontalMenu">
                         <li><a href="{{path('jdr_core_home')}}"> Accueil </a></li>
-                        <li><a href=""> Parties en cours </a></li>
+                        <li>
+                            <a href="#">Parties en cours</a>
+                            <ul>
+                                <li><a href="#">En tant que MJ</a></li>
+                                <li><a href="#">En tant que joueur</a></li>
+                            </ul>
+                        </li>
                         <li><a href=""> Personnages </a></li>
                     </ul>
                 </div>
