@@ -33,6 +33,10 @@ class SessionController extends Controller
             $em->persist($session);
             $em->flush();
 
+            $request->getSession()->getFlashBag()->add('indo', 'Nouvelle partie créée');
+
+            return $this->redirectToRoute('jdr_core_home');
+
         }
 
         return $this->render("JDRCoreBundle:Session:sessioncreation.html.twig");

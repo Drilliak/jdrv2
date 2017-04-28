@@ -10,6 +10,11 @@
 {% block header %}{{ parent() }}{% endblock %}
 
 {% block body %}
+    <div id="flashBag">
+        {% for message in app.session.flashbag.get('info') %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
 
     <div>
         <a href="{{ path('jdr_core_session_creation') }}" class="button">Créer une nouvelle partie</a>
