@@ -7,24 +7,29 @@
         <title>{%  block title %}JDR{% endblock %}</title>
         {% block stylesheets %}
             <link href="{{ asset('css/JDR/CoreBundle/layout.css') }}" rel="stylesheet" />
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         {% endblock %}
     </head>
 
     <body>
         {% block header %}
             <header>
+                <div></div>
                 <div id="mainMenu">
                     <ul id="horizontalMenu">
                         <li><a href="{{path('jdr_core_home')}}"> Accueil </a></li>
                         <li>
                             <a href="#">Parties en cours</a>
-                            <ul>
+                            <ul class="dropdown_menu">
                                 <li><a href="#">En tant que MJ</a></li>
                                 <li><a href="#">En tant que joueur</a></li>
                             </ul>
                         </li>
                         <li><a href=""> Personnages </a></li>
                     </ul>
+                </div>
+                <div>
+                    <img src="{{ asset('img/alarm.png') }}" />
                 </div>
                 <div id="dataConnection">
                     <p>Connecté en tant que {{ app.user.username }}</p>
@@ -37,8 +42,14 @@
         {% endblock %}
 
 
-        {% block javaacript %}
+        {% block javascript %}
             <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
+            <script src="{{ asset('js/notification/jquery.toaster.js') }}"></script>
+            <script>
+                $.toaster({
+                    message : 'Your message here'
+                });
+            </script>
         {% endblock %}
     </body>
 </html>

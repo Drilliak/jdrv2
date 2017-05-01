@@ -1,0 +1,29 @@
+jdr_core_ajax_username:
+    path: /username
+    defaults:
+        _controller: JDRCoreBundle:Core:username
+        methods: [post]
+
+jdr_core_ajax_remove_stat_session:
+    path: /remove-stat
+    defaults:
+        _controller: JDRCoreBundle:Session:removeStat
+        metthods: [post]
+
+jdr_core_ajax_add_stat_session:
+    path: /add-stat
+    defaults:
+        _controller: JDRCoreBundle:Session:addStat
+        methods: [post]
+
+jdr_core_ajax_send_invitation:
+    path: /add-player
+    defaults:
+        _controller: JDRCoreBundle:Invitation:addPlayer
+        methods: [post]
+
+jdr_core_ajax_show_invitation:
+    path: /show-invit
+    defaults:
+        _controller: JDRCoreBundle:Invitation:showInvit
+        methods: [post]

@@ -8,13 +8,19 @@ jdr_core_session_creation:
     defaults:
         _controller: JDRCoreBundle:Session:createSession
 
+jdr_core_session_destroy:
+    path: /supprimer-partie/{id}
+    defaults:
+        _controller: JDRCoreBundle:Session:removeSession
+
 jdr_core_game_edition:
     path: /partie/mj/{id}
     defaults:
         _controller: JDRCoreBundle:Session:editSession
 
-jdr_core_ajax_username:
-    path: /ajax/username
-    defaults:
-        _controller: JDRCoreBundle:Core:username
-        methods: [post]
+
+jdr_core_ajax:
+    resource: "@JDRCoreBundle/Resources/config/routingAjax.yml"
+    prefix:   /ajax
+
+

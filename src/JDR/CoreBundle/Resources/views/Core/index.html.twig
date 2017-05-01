@@ -11,7 +11,10 @@
 
 {% block body %}
     <div id="flashBag">
-        {% for message in app.session.flashbag.get('info') %}
+        {% for message in app.session.flashbag.get('newSession') %}
+            <p>{{ message }}</p>
+        {% endfor %}
+        {% for message in app.session.flashbag.get('removeSession') %}
             <p>{{ message }}</p>
         {% endfor %}
     </div>

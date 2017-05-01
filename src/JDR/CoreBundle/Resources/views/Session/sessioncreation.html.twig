@@ -2,47 +2,40 @@
 
 {% block title %}Création de partie{% endblock %}
 
-{% block stylesheets%}
+{% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('css/JDR/CoreBundle/Session/sessioncreation.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/tags-input/jquery.tagsinput.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/JDR/CoreBundle/Session/sessioncreation.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/bootstrap-taginput/bootstrap-tagsinput.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 
 {% block header %}{{ parent() }}{% endblock %}
 {% block body %}
-    <form action="{{ path('jdr_core_session_creation') }}" method="post">
-        <div id="#form">
-            <p>
-                <label for="gamename">Nom de la partie</label>
-                <input type="text" id="gamename" name="_gamename" required="required" />
-            </p>
-            <p>
-                <label for="allowedstats">Caractéristiques autorisées</label>
-                 <input type="text" id="allowedstats" name="_allowedstats" required="required" value="pv,pv max, mana, mana max,"/>
-            </p>
-            <p>
-                <label for="users">Joueurs</label>
-                <div id ="players"></div>
-                <input type="text" id="users" name="_users" />
-            </p>
-            <input type="submit" id="_submit" name="_submit" value="Créer la partie" />
-        </div>
-    </form>
+    {{ form_start(form, {'attr' : {'class': 'form-horizontal'}}) }}
+
+    {{ form_errors(form) }}
+
+
+    <div class="form-group">
+        {{ form_label(form.name, "Nom de la partie") }}
+        {{ form_widget((form.name)) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.allowedStats, "Caractéristiques autorisées") }}
+        {{ form_widget(form.allowedStats, {'value': 'PV, PV max, Mana, Mana max', 'attr': {'data-role':"tagsinput"}}) }}
+    </div>
+
+
+    {{ form_widget(form.submit, {'label': 'Créer une partie'}) }}
+
+    {{ form_rest(form) }}
+
+    {{ form_end(form) }}
 
 {% endblock %}
 
-{% block javaacript %}
+{% block javascript %}
     {{ parent() }}
-    <script src="{{ asset('js/tags-input/jquery.tagsinput.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-    <script>
-        $('#allowedstats').tagsInput();
-    </script>
-    <script>
-        $("#users").autocomplete({
-            source : "{{ path('jdr_core_ajax_username') }}"
-        });
-    </script>
+    <script src="{{ asset('js/bootstrap-taginput/bootstrap-tagsinput.js') }}"></script>
 {% endblock %}

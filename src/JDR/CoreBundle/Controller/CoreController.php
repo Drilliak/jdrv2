@@ -51,4 +51,7 @@ class CoreController extends Controller
         return new Response("Ce n'est pas une requête Ajax", 400);
 
     }
+
+
+
 }
