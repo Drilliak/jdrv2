@@ -27,3 +27,21 @@ jdr_core_ajax_show_invitation:
     defaults:
         _controller: JDRCoreBundle:Invitation:showInvit
         methods: [post]
+
+jdr_core_ajax_cancel_invitation:
+    path: /cancel-invit
+    defaults:
+        _controller: JDRCoreBundle:Invitation:cancelInvitation
+        methods: [post]
+
+jdr_core_ajax_remove_player:
+    path: /remove-player
+    defaults:
+        _controller: JDRCoreBundle:Invitation:removePlayer
+        methods: [post]
+
+jdr_core_ajax_send_again:
+    path: /send-again
+    defaults:
+        _controller: JDRCoreBundle:Invitation:sendAgainInvitation
+        methods : [post]

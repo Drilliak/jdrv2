@@ -28,4 +28,22 @@ class InvitationRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Retourne l'invitation qui possède les paramètres saisis
+     */
+    public function select($playerName, $idSession){
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('i')
+            ->from('JDRCoreBundle:Invitation', 'i')
+            ->innerJoin('i.player', 'p')
+            ->innerJoin('i.session','s')
+            ->where('s.id = :session_id')
+            ->andWhere('p.username = :username')
+            ->setParameter('session_id', $idSession)
+            ->setParameter('username', $playerName)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

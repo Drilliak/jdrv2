@@ -18,13 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 class InvitationController extends Controller
 {
 
+    private static $ajaxError = "Ce n'est pas une requête ajax";
+
     /**
      * Requête ajax qui crée une invitation quand un joueur est ajouté dans une partie
      */
     public function addPlayerAction(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
-
             $idSession = $request->get('idSession');
             $playerName = $request->get('playerName');
 
@@ -62,11 +63,13 @@ class InvitationController extends Controller
             return new JsonResponse('success');
         }
 
-        return new Response("Ce n'est pas une requête Ajax", 400);
+        return new Response(self::$ajaxError, 400);
     }
 
-    public function showInvitAction(Request $request){
-        if ($request->isXmlHttpRequest()){
+
+    public function showInvitAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
             $idSession = $request->get('idSession');
             $invitationRepository = $this
                 ->getDoctrine()
@@ -76,6 +79,63 @@ class InvitationController extends Controller
             return new JsonResponse($invitationRepository->findNameAndStatut($idSession));
 
         }
-        return new Response("Ce n'est pas une requête Ajax", 400);
+        return new Response(self::$ajaxError, 400);
+    }
+
+    /**
+     * retire l'invitation envoyé au joueur
+     */
+    public function cancelInvitationAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('JDRCoreBundle:Invitation');
+
+            $playerName = $request->get('playerName');
+            $idSession = $request->get('idSession');
+            $invitation = $repository->select($playerName, $idSession);
+
+            $em->remove($invitation);
+            $em->flush();
+            return new JsonResponse('success');
+
+        }
+        return new Response(self::$ajaxError, 400);
+    }
+
+    /**
+     * Retire l'invitation envoyé au joueur et supprime le joueur de la partie
+     */
+    public function removePlayerAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            // On retire l'invitation
+            $this->cancelInvitationAction($request);
+
+            // TODO Retirer l'utilisateur de la session
+        }
+        return new Response(self::$ajaxError, 400);
+    }
+
+
+    /**
+     * Renvoie l'invitation au joueur
+     */
+    public function sendAgainInvitationAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $playerName = $request->get('playerName');
+            $idSession = $request->get('idSession');
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('JDRCoreBundle:Invitation');
+            $invitation = $repository->select($playerName, $idSession);
+            $invitation->setStatut('wait');
+
+            $em->flush();
+            return new JsonResponse('success');
+
+        }
+
+        return new Response(self::$ajaxError, 400);
     }
 }

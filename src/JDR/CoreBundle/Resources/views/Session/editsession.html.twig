@@ -20,20 +20,24 @@
 
 
     <h3>Participants</h3>
-    <ul id="participants">
+    <table id="participants">
+        <tr>
+            <td>Utilisateur</td>
+            <td>État</td>
+        </tr>
         {% for invitation in invitations %}
             {% if invitation.statut == "wait" %}
-                {% set msg = '<li id="' ~  invitation.username  ~ '"> ' ~ invitation.username  ~ ' En attente <button class="cancelinvitation">Annuler l\'invitation</button></li>' %}
+                {% set msg = '<tr id ="' ~ invitation.username ~ '"><td>' ~ invitation.username ~ '</td> <td>En attente</td> <td><button class="cancelinvitation">Annuler l\'invitation</button></td></tr>' %}
             {% endif %}
             {% if invitation.statut == "accepted" %}
-                {% set msg = '<li id="' ~  invitation.username  ~ '"> ' ~ invitation.username  ~ ' <button class="removePlayer">Retirer le joueur</button></li>' %}
+                {% set msg = '<tr id="' ~  invitation.username  ~ '"><td>' ~ invitation.username  ~ '</td> <td>Accepté</td> <td><button class="removePlayer">Retirer le joueur</button></td></tr>' %}
             {% endif %}
             {% if invitation.statut == "denied" %}
-                {% set msg = '<li id="' ~  invitation.username  ~ '"> ' ~ invitation.username  ~ ' Refusé <button class="sendagain">Renvoyer l\'invitation</button><span class="ui-icon ui-icon-close"></span></li>' %}
+                {% set msg = '<tr id="' ~  invitation.username  ~ '"><td>' ~ invitation.username  ~ '</td> <td>Refusé</td> <td><button class="sendagain">Renvoyer l\'invitation</button></td>/tr>' %}
             {% endif %}
             {{ msg|raw }}
         {% endfor %}
-    </ul>
+    </table>
 
 
     <label for="users">Ajouter un joueur : </label><input type="text" id="users" name="_users"/>
@@ -52,7 +56,6 @@
         <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap-taginput/bootstrap-tagsinput.js') }}"></script>
         <script>
-
             function removeSession() {
                 $("#dialog").dialog({
                     autoOpen: false,
@@ -78,12 +81,12 @@
             }
 
 
-            function addItem(event) {
+            function addItem(event, idSession) {
                 $.post(
                     "{{ path('jdr_core_ajax_add_stat_session') }}",
                     {
                         stat: event.item,
-                        idSession: {{ id }}
+                        idSession: idSession
                     },
                     function (data) {
 
@@ -93,12 +96,12 @@
 
             }
 
-            function removeItem(event) {
+            function removeItem(event, idSession) {
                 $.post(
                     "{{ path('jdr_core_ajax_remove_stat_session') }}",
                     {
                         stat: event.item,
-                        idSession: {{ id }}
+                        idSession: idSession
                     },
                     function (data) {
 
@@ -107,11 +110,11 @@
                 );
             }
 
-            function sendInvit(ui) {
+            function sendInvit(ui, idSession) {
                 $.post(
                     "{{ path('jdr_core_ajax_send_invitation') }}",
                     {
-                        idSession: {{ id }},
+                        idSession: idSession,
                         playerName: ui.item.value
                     },
                     function (data) {
@@ -120,27 +123,89 @@
                 );
             }
 
-            // Fonctions pour la gestion des invitations
-
-            function
 
         </script>
-
         <script>
+
             $(document).ready(function () {
+
+                // Actions sur le champ des caractéristiques autorisées
                 $('input').on('itemAdded', function (event) {
-                    addItem(event);
+                    addItem(event, {{ id }});
                 });
                 $('input').on('itemRemoved', function (event) {
-                    removeItem(event);
+                    removeItem(event, {{ id }});
                 });
+
+                /************* Actions sur les boutons des participants ***********/
+
+                // Annuler l'invitation
+                $("tr").on("click", "button.cancelinvitation", function () {
+                    trElement = $(this).parent().parent();
+                    trElement.remove();
+                    $.post(
+                        "{{ path('jdr_core_ajax_cancel_invitation') }}",
+                        {
+                            playerName: trElement.attr('id'),
+                            idSession: {{ id }}
+                        },
+                        function (data) {
+
+                        },
+                        'json'
+                    );
+
+                });
+
+
+                // Supprimer le joueur
+                $("tr").on("click", "button.removePlayer", function () {
+                    trElement = $(this).parent().parent();
+                   trElement.remove();
+                    $.post(
+                        "{{ path('jdr_core_ajax_cancel_invitation') }}",
+                        {
+                            playerName: trElement.attr('id'),
+                            idSession: {{ id }}
+                        },
+                        function (data) {
+
+                        },
+                        'json'
+                    );
+
+                });
+
+                // TODO Ajout de la suppression d'une ivnitation lors du click sur la croix (pas encore définie) à côté d'une invitation refusée.
+
+                // Renvoyer l'invitation
+                $("tr").on("click", "button.sendagain", function () {
+                    trElement = $(this).parent().parent();
+                    playerName = trElement.attr('id');
+                    trElement.html('<td>' + playerName + '</td>' + '<td>En attente</td> <td><button class="cancelinvitation">Annuler l\'invitation</button></td>');
+                    $.post(
+                        " {{ path('jdr_core_ajax_send_again') }}",
+                        {
+                            playerName: playerName,
+                            idSession: {{ id }}
+                        },
+                        function (data) {
+
+                        },
+                        'json'
+                    );
+
+                });
+
+
+                /**************    Action sur le champ d'ajout de joueur *************/
                 $("#users").autocomplete({
                     source: "{{ path('jdr_core_ajax_username') }}",
 
                     select: function (event, ui) {
                         if (!$("#" + ui.item.value).length) {
-                            $("#participants").append('<li id="ui.item.value">' + ui.item.value + ' En attente <button class="cancelinvitation">Annuler l\'invitation</button></li>');
-                            sendInvit(ui);
+                            $("#participants").append('<tr id="' + ui.item.value + '"><td>' + ui.item.value + '</td> <td>En attente</td> <td><button class="cancelinvitation">Annuler l\'invitation</button></td></tr>');
+                            sendInvit(ui, {{ id }});
                         } else {
                             $("#error").html('<p>Une invitation a déjà été envoyée à ce joueur</p>');
                             $("#error").show();
@@ -154,7 +219,11 @@
                     }
                 });
 
+
+                // Action sur le bouton de suppression de partie
                 removeSession();
+
+                // TODO Actualisation données en temps réel
             });
         </script>
     {% endblock %}
