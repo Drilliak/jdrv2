@@ -3,10 +3,6 @@ jdr_core_home:
     defaults:
         _controller: JDRCoreBundle:Core:index
 
-jdr_core_session_creation:
-    path: /creation-partie
-    defaults:
-        _controller: JDRCoreBundle:Session:createSession
 
 jdr_core_session_destroy:
     path: /supprimer-partie/{id}

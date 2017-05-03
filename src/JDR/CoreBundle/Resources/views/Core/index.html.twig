@@ -11,17 +11,17 @@
 
 {% block body %}
     <div id="flashBag">
-        {% for message in app.session.flashbag.get('newSession') %}
-            <p>{{ message }}</p>
-        {% endfor %}
         {% for message in app.session.flashbag.get('removeSession') %}
             <p>{{ message }}</p>
         {% endfor %}
     </div>
-
-    <div>
-        <a href="{{ path('jdr_core_session_creation') }}" class="button">Créer une nouvelle partie</a>
-    </div>
+    <fieldset>
+        <legend>Créer une nouvelle partie</legend>
+        <form method="post" action ="">
+            <label for="sessionName">Nom : </label><input type="text" name="_sessionName" id = "sessionName" />
+            <input type="submit" value ="Créer"/>
+        </form>
+    </fieldset>
 
     <div id="mygames">
         <h2>Parties en cours</h2>

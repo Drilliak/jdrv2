@@ -9,6 +9,12 @@
 {% endblock %}
 
 {% block body %}
+    <div id="flashbag">
+        {% for message in app.session.flashbag.get('newSession') %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+
     <h2>Partie {{ name }}</h2>
 
     <h3>Caractéristiques autorisées</h3>
@@ -64,7 +70,7 @@
                         {
                             text: "Oui",
                             click: function () {
-                                $(location).attr('href', "{{ path('jdr_core_session_destroy', {'id': id}) }}");
+                                $(location).attr('href', "{{ path('jdr_core_session_destroy', {'id': id }) }}");
                             }
                         },
                         {

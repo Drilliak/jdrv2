@@ -16,50 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 class SessionController extends Controller
 {
 
-    /**
-     * Page de création d'une partie
-     */
-    public function createSessionAction(Request $request)
-    {
-
-        $session = array();
-
-        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $session);
-
-        $formBuilder
-            ->add("name", TextType::class)
-            ->add("allowedStats", TextType::class)
-            ->add("submit", SubmitType::class);
-
-        $form = $formBuilder->getForm();
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            $data = $form->getData();
-
-            $gameName = $data['name'];
-            $allowedStats = explode(',', $data['allowedStats']);
-            $gameMaster = $this->get('security.token_storage')->getToken()->getUser();
-
-            $session = new Session();
-            $session->setName($gameName);
-            $session->setAllowedStats($allowedStats);
-            $session->setGameMaster($gameMaster);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($session);
-            $em->flush();
-            $id = $session->getID();
-            $request->getSession()->getFlashBag()->add('newSession', "Nouvelle partie créée");
-
-            return $this->redirectToRoute('jdr_core_home');
-
-
-        }
-
-        return $this->render("JDRCoreBundle:Session:sessioncreation.html.twig", array(
-            'form' => $form->createView()
-        ));
-    }
 
     /**
      * Page d'édition d'une partie en cours
