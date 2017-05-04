@@ -1,55 +1,91 @@
 {# src/JDR/CoreBundle/view/layout.html.twig #}
 
 <!DOCTYPE>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>{%  block title %}JDR{% endblock %}</title>
-        {% block stylesheets %}
-            <link href="{{ asset('css/JDR/CoreBundle/layout.css') }}" rel="stylesheet" />
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        {% endblock %}
-    </head>
+<html lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Drilliak">
+    <link rel="icon" href="">
 
-    <body>
-        {% block header %}
-            <header>
-                <div></div>
-                <div id="mainMenu">
-                    <ul id="horizontalMenu">
-                        <li><a href="{{path('jdr_core_home')}}"> Accueil </a></li>
-                        <li>
-                            <a href="#">Parties en cours</a>
-                            <ul class="dropdown_menu">
-                                <li><a href="#">En tant que MJ</a></li>
-                                <li><a href="#">En tant que joueur</a></li>
-                            </ul>
-                        </li>
-                        <li><a href=""> Personnages </a></li>
-                    </ul>
-                </div>
-                <div>
-                    <img src="{{ asset('img/alarm.png') }}" />
-                </div>
-                <div id="dataConnection">
-                    <p>Connecté en tant que {{ app.user.username }}</p>
-                    <a href ="{{ path('fos_user_security_logout') }}">Déconnexion</a>
-                </div>
-            </header>
-        {% endblock %}
+    <title>{% block title %}JDR{% endblock %}</title>
 
-        {% block body %}
-        {% endblock %}
+    {% block stylesheets %}
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('bootstrap-3.3.7-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="http://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
 
-        {% block javascript %}
-            <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-            <script src="{{ asset('js/notification/jquery.toaster.js') }}"></script>
-            <script>
-                $.toaster({
-                    message : 'Your message here'
-                });
-            </script>
-        {% endblock %}
-    </body>
+        <!-- Custom styles for this template -->
+        <link href="{{ asset('css/JDR/CoreBundle/navbar-fixed-top.css') }}" rel="stylesheet">
+
+        {#<link href="{{ asset('css/JDR/CoreBundle/layout.css') }}" rel="stylesheet"/>#}
+
+
+    {% endblock %}
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+{% block header %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ path('jdr_core_home') }}">Logo</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="{{ path('jdr_core_home') }}">Accueil</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Partie en cours<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="">En tant que MJ</a></li>
+                            <li><a href="">En tant que joueur</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Connecté en tant que {{ app.user.username }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('fos_user_security_logout') }}">Déconnexion</a></li>
+                        </ul>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+<div class="container">
+    {% block body %}
+    {% endblock %}
+</div>
+
+
+{% block javascript %}
+    <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ asset('bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/notification/jquery.toaster.js') }}"></script>
+
+{% endblock %}
+</body>
 </html>

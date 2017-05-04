@@ -45,3 +45,9 @@ jdr_core_ajax_send_again:
     defaults:
         _controller: JDRCoreBundle:Invitation:sendAgainInvitation
         methods : [post]
+
+jdr_core_ajax_accept_invitation:
+    path: /accept
+    defaults:
+        _controller: JDRCoreBundle:Core:acceptInvitation
+        methods : [post]

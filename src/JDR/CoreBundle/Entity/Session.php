@@ -30,13 +30,12 @@ class Session
     private $name;
 
 
-
-        /**
-         * @var User
-         * @ORM\ManyToOne(targetEntity="JDR\UserBundle\Entity\User")
-         * @ORM\JoinColumn(nullable=false)
-         */
-        private $gameMaster;
+    /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="JDR\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $gameMaster;
 
     /**
      * @ORM\ManyToMany(targetEntity="JDR\UserBundle\Entity\User", cascade={"persist"})
@@ -50,8 +49,6 @@ class Session
      * @ORM\Column(name="allowedStats", type="array")
      */
     private $allowedStats;
-
-
 
 
     /**

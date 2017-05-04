@@ -46,4 +46,20 @@ class InvitationRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    /**
+     * Renvoie toutes les sessions où l'utilisateur a reçu des invitations
+     */
+    public function findSessions($playerId){
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select("s.name, i.id, s.id")
+            ->from("JDRCoreBundle:Invitation", 'i')
+            ->innerJoin('i.player', 'p')
+            ->innerJoin('i.session', 's')
+            ->where('p.id = :player_id')
+            ->setParameter('player_id', $playerId)
+            ->getQuery()
+            ->getResult();
+    }
 }

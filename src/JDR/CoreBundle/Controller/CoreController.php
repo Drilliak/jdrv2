@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CoreController extends Controller
 {
+
+    private static $jsonError = "Ce n'est pas une requête ajax";
+
     /**
      * Page principale où l'utilisateur arrive après la connexion
      *
@@ -20,7 +23,7 @@ class CoreController extends Controller
     public function indexAction(Request $request)
     {
         // Si l'utilisateur a demandé la création d'une partie
-        if ($request->isMethod('POST')){
+        if ($request->isMethod('POST')) {
             $sessionName = $request->get('_sessionName');
             $allowedStats = array('PV', 'PV max', 'Mana', 'Mana max');
             $gameMaster = $this->get('security.token_storage')->getToken()->getUser();
@@ -45,7 +48,9 @@ class CoreController extends Controller
 
         $gamesAsGm = $repository->selectSessionAsGm($idUser, array('name', 'id'));
 
-        return $this->render("JDRCoreBundle:Core:index.html.twig", array("gameAsGm" => $gamesAsGm));
+        $invitationRepository = $this->getDoctrine()->getManager()->getRepository("JDRCoreBundle:Invitation");
+        $invitations = $invitationRepository->findSessions($idUser);
+        return $this->render("JDRCoreBundle:Core:index.html.twig", array("gameAsGm" => $gamesAsGm, 'invitations' => $invitations));
     }
 
     /**
@@ -67,10 +72,19 @@ class CoreController extends Controller
 
 
         }
-        return new Response("Ce n'est pas une requête Ajax", 400);
+        return new Response(self::$jsonError, 400);
 
     }
 
+    public function acceptInvitationAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $idUser = $this->get('security.token_storage')->getToken()->getUser()->getId();
+            return new JsonResponse($idUser);
+        }
+
+        return new Response(self::$jsonError, 400);
+    }
 
 
 }

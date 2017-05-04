@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('css/JDR/CoreBundle/Core/index.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block header %}{{ parent() }}{% endblock %}
@@ -14,6 +13,14 @@
         {% for message in app.session.flashbag.get('removeSession') %}
             <p>{{ message }}</p>
         {% endfor %}
+    </div>
+
+    <div id="invitations">
+        <ul>
+        {% for invitation in invitations %}
+            <li id ="{{ invitation.id }}"><span class="gameName"> {{ invitation.name }}</span> <button class="acceptinvitation">Accepter l'invitation</button></li>
+        {% endfor %}
+        </ul>
     </div>
     <fieldset>
         <legend>Créer une nouvelle partie</legend>
@@ -36,8 +43,37 @@
         </div>
         <div id="asplayer">
             <h3>En tant que joueur</h3>
+            <ul>
+
+            </ul>
         </div>
     </div>
 
 
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){
+            $('ul').on("click", "button.acceptinvitation", function(){
+                game = $(this).parent().children('span').text();
+                $(this).parent().remove();
+                $('#asplayer ul').append('<li><a href="">' + game + '</a></li>');
+
+                // On passe le statut de l'invitation à accepted
+                // et on ajoute le joueur à la session.
+                $.post(
+                  "{{ path('jdr_core_ajax_accept_invitation') }}",
+                    {
+
+                    },
+                    function(data){
+                        console.log(data);
+                    },
+                    'json'
+                );
+            });
+        });
+    </script>
 {% endblock %}
