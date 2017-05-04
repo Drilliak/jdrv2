@@ -23,7 +23,7 @@
         <!-- Custom styles for this template -->
         <link href="{{ asset('css/JDR/CoreBundle/navbar-fixed-top.css') }}" rel="stylesheet">
 
-        {#<link href="{{ asset('css/JDR/CoreBundle/layout.css') }}" rel="stylesheet"/>#}
+        <link href="{{ asset('css/JDR/CoreBundle/layout.css') }}" rel="stylesheet"/>
 
 
     {% endblock %}
@@ -37,8 +37,8 @@
 
 <body>
 {% block header %}
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
@@ -51,7 +51,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="{{ path('jdr_core_home') }}">Accueil</a></li>
+                    <li><a href="{{ path('jdr_core_home') }}">Accueil</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Partie en cours<span class="caret"></span></a>
@@ -63,9 +63,17 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
+
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Invitations <span id="nb-invitations" class="badge"></span><span class="caret"></span></a>
+                        <ul id="invitations-menu" class="dropdown-menu">
+                        </ul>
+                    </li>
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Connecté en tant que {{ app.user.username }}<span class="caret"></span></a>
+                           aria-expanded="false">{{ app.user.username }}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            <li><a href="">Profil</a></li>
                             <li><a href="{{ path('fos_user_security_logout') }}">Déconnexion</a></li>
                         </ul>
 
@@ -75,16 +83,33 @@
     </nav>
 {% endblock %}
 
-<div class="container">
-    {% block body %}
-    {% endblock %}
-</div>
+{% block body %}
+{% endblock %}
+
 
 
 {% block javascript %}
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ asset('bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/notification/jquery.toaster.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            (function updateInvitations(){
+                $.post(
+                    "{{ path('jdr_core_ajax_find_invitation') }}",
+                    {
+                        idUser: {{ app.user.id }}
+                    },
+                    function(data){
+                        $("#nb-invitations").text(data.nbInvitations);
+                        $("#invitations-menu")
+                    },
+                    'json'
+                );
+                setTimeout(updateInvitations, 1000);
+            })();
+        });
+    </script>
 
 {% endblock %}
 </body>

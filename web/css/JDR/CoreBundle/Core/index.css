@@ -1,8 +1,6 @@
-a.button {
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
 
-    text-decoration: none;
-    color: initial;
+/* Centrage des titres "En tant que maître du jeu" et "En tant que joueur" */
+#games-as-gm h3, #games-as-player h3 {
+    text-align: center;
 }
+

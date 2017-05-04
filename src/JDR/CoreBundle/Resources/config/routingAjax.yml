@@ -22,10 +22,10 @@ jdr_core_ajax_send_invitation:
         _controller: JDRCoreBundle:Invitation:addPlayer
         methods: [post]
 
-jdr_core_ajax_show_invitation:
-    path: /show-invit
+jdr_core_ajax_find_invitation:
+    path: /find-invit
     defaults:
-        _controller: JDRCoreBundle:Invitation:showInvit
+        _controller: JDRCoreBundle:Invitation:findInvitations
         methods: [post]
 
 jdr_core_ajax_cancel_invitation:

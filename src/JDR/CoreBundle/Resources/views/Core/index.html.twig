@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('css/JDR/CoreBundle/Core/index.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block header %}{{ parent() }}{% endblock %}
@@ -15,65 +16,71 @@
         {% endfor %}
     </div>
 
-    <div id="invitations">
-        <ul>
-        {% for invitation in invitations %}
-            <li id ="{{ invitation.id }}"><span class="gameName"> {{ invitation.name }}</span> <button class="acceptinvitation">Accepter l'invitation</button></li>
-        {% endfor %}
-        </ul>
+    <div class="container">
+        <div class="row">
+            <form id="create-game-form" method="post" action="">
+                <div class="form-group col-sm-2">
+                    <input type="text" name="_sessionName" id="sessionName" required/>
+                </div>
+                <button type="submit" class="btn btn-success col-sm-2">Créer une nouvelle partie</button>
+            </form>
+        </div>
+
+        <div class="row">
+            <h2 class="col-sm-offset-4 col-sm-4">Parties en cours</h2>
+        </div>
+        <div id="games" class="row">
+            <div id="games-as-gm" class="col-sm-offset-3 col-sm-3">
+                <h3>En tant que maître du jeu</h3>
+                <div class="list-group">
+                    {% set cpt = 0 %}
+                    {% for game in gameAsGm %}
+                        {% if cpt <3 %}
+                            <a href="{{ path('jdr_core_game_edition', {'id': game.id}) }}" class="list-group-item">
+                                <h4>{{ game.name }}</h4>
+                            </a>
+                            {% set cpt = cpt +1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div id="games-as-player" class="col-sm-3">
+                <h3>En tant que joueur</h3>
+                <div class="list-group">
+
+                </div>
+
+            </div>
+        </div>
     </div>
-    <fieldset>
-        <legend>Créer une nouvelle partie</legend>
-        <form method="post" action ="">
-            <label for="sessionName">Nom : </label><input type="text" name="_sessionName" id = "sessionName" />
-            <input type="submit" value ="Créer"/>
-        </form>
-    </fieldset>
-
-    <div id="mygames">
-        <h2>Parties en cours</h2>
-        <div id="asgamemaster">
-            <h3>En tant que maître de jeu</h3>
-            <ul>
-                {% for game in gameAsGm %}
-                    <li><a href="{{ path('jdr_core_game_edition', {'id': game.id}) }}">{{ game.name }}</a></li>
-                {% endfor %}
-            </ul>
-
-        </div>
-        <div id="asplayer">
-            <h3>En tant que joueur</h3>
-            <ul>
-
-            </ul>
-        </div>
     </div>
 
 
 {% endblock %}
 
-{% block javascript %}
-    {{ parent() }}
-    <script>
-        $(document).ready(function(){
-            $('ul').on("click", "button.acceptinvitation", function(){
-                game = $(this).parent().children('span').text();
-                $(this).parent().remove();
-                $('#asplayer ul').append('<li><a href="">' + game + '</a></li>');
+    {% block javascript %}
+        {{ parent() }}
+        <script>
+            $(document).ready(function () {
 
-                // On passe le statut de l'invitation à accepted
-                // et on ajoute le joueur à la session.
-                $.post(
-                  "{{ path('jdr_core_ajax_accept_invitation') }}",
-                    {
 
-                    },
-                    function(data){
-                        console.log(data);
-                    },
-                    'json'
-                );
+                $('ul').on("click", "button.acceptinvitation", function () {
+                    game = $(this).parent().children('span').text();
+                    $(this).parent().remove();
+                    $('#asplayer ul').append('<li><a href="">' + game + '</a></li>');
+
+                    // On passe le statut de l'invitation à accepted
+                    // et on ajoute le joueur à la session.
+                    $.post(
+                        "{{ path('jdr_core_ajax_accept_invitation') }}",
+                        {},
+                        function (data) {
+                            console.log(data);
+                        },
+                        'json'
+                    );
+                });
             });
-        });
-    </script>
-{% endblock %}
+        </script>
+    {% endblock %}

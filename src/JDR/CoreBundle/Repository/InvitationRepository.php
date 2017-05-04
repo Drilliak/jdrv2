@@ -49,6 +49,7 @@ class InvitationRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * Renvoie toutes les sessions où l'utilisateur a reçu des invitations
+     * Revnoie le nom de la session, l'id de l'inviation et l'id de la session
      */
     public function findSessions($playerId){
         return $this->getEntityManager()

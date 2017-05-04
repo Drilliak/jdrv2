@@ -67,17 +67,23 @@ class InvitationController extends Controller
     }
 
 
-    public function showInvitAction(Request $request)
+    /**
+     * Renvoie toutes les invitations en attentes envoyés à un joueurs.
+     */
+    public function findInvitationsAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $idSession = $request->get('idSession');
-            $invitationRepository = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('JDRCoreBundle:Invitation');
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('JDRCoreBundle:Invitation');
 
-            return new JsonResponse($invitationRepository->findNameAndStatut($idSession));
-
+            $idUser = $request->get('idUser');
+            $invitations = $repository->findSessions($idUser);
+            $nbInvitations = count($invitations);
+            $res = [
+                'invitation'   => $invitations,
+                'nbInvitations' => $nbInvitations
+            ];
+            return new JsonResponse($res);
         }
         return new Response(self::$ajaxError, 400);
     }
