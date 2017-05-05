@@ -1,5 +1,11 @@
-body
-{
-    margin-left:25px;
+body {
+    margin-left: 25px;
     margin-right: 25px;
+}
+
+.invitations {
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    cursor: default;
 }

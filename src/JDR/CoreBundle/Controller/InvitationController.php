@@ -80,7 +80,7 @@ class InvitationController extends Controller
             $invitations = $repository->findSessions($idUser);
             $nbInvitations = count($invitations);
             $res = [
-                'invitation'   => $invitations,
+                'invitations'   => $invitations,
                 'nbInvitations' => $nbInvitations
             ];
             return new JsonResponse($res);

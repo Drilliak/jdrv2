@@ -65,7 +65,8 @@
                     <li class="dropdown">
 
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Invitations <span id="nb-invitations" class="badge"></span><span class="caret"></span></a>
+                           aria-expanded="false">Invitations <span id="nb-invitations" class="badge"></span><span
+                                    class="caret"></span></a>
                         <ul id="invitations-menu" class="dropdown-menu">
                         </ul>
                     </li>
@@ -93,21 +94,39 @@
     <script src="{{ asset('bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/notification/jquery.toaster.js') }}"></script>
     <script>
-        $(document).ready(function(){
-            (function updateInvitations(){
+        $(document).ready(function () {
+            (function updateInvitations() {
                 $.post(
                     "{{ path('jdr_core_ajax_find_invitation') }}",
                     {
                         idUser: {{ app.user.id }}
                     },
-                    function(data){
+                    function (data) {
                         $("#nb-invitations").text(data.nbInvitations);
-                        $("#invitations-menu")
+                        let items = [];
+                        for (let invitation of data.invitations) {
+                            items.push(
+                                '<li id =" + invitation.id + " class="invitations">' +
+                                '<a href="#">' +
+                                invitation.name +
+                                '<div>' +
+                                ' <span id="accept-invitation" class="glyphicon glyphicon-ok" style="margin-right: 5px"></span> ' +
+                                ' <span class="glyphicon glyphicon-remove"></span> ' +
+                                '</div>' +
+                                '</a>' +
+                                '</li>'
+                            );
+                        }
+                        $("#invitations-menu").empty().html(items.join(""));
                     },
                     'json'
                 );
                 setTimeout(updateInvitations, 1000);
             })();
+
+            $("#accept-invitation").on("click", function(){
+                console.log('coucou')
+            });
         });
     </script>
 
