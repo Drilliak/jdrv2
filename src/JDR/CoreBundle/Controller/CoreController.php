@@ -24,7 +24,7 @@ class CoreController extends Controller
     {
         // Si l'utilisateur a demandé la création d'une partie
         if ($request->isMethod('POST')) {
-            $sessionName = $request->get('_sessionName');
+            $sessionName = $request->get('sessionName');
             $allowedStats = array('PV', 'PV max', 'Mana', 'Mana max');
             $gameMaster = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -38,19 +38,25 @@ class CoreController extends Controller
             $id = $session->getID();
             $request->getSession()->getFlashBag()->add('newSession', "Nouvelle partie créée, vous pouvez désormais la personnaliser");
 
-            return $this->redirectToRoute('jdr_core_game_edition', ['id' => $id]);
+            return $this->redirectToRoute('jdr_core_game_edition', ['idSession' => $id]);
+        }
+
+        // Rafraichissement de la page (ajax)
+        if ($request->isXmlHttpRequest()){
+
         }
 
         // Sinon on affiche simplement la page d'index.
         $repository = $this->getDoctrine()->getManager()->getRepository("JDRCoreBundle:Session");
-
         $idUser = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $sessionsAsGm = $repository->showSessionsAsGm($idUser);
+        $sessionsAsPlayer = $repository->showSessionAsPlayer($idUser);
 
-        $gamesAsGm = $repository->selectSessionAsGm($idUser, array('name', 'id'));
 
-        $invitationRepository = $this->getDoctrine()->getManager()->getRepository("JDRCoreBundle:Invitation");
-        $invitations = $invitationRepository->findSessions($idUser);
-        return $this->render("JDRCoreBundle:Core:index.html.twig", array("gameAsGm" => $gamesAsGm, 'invitations' => $invitations));
+        return $this->render("JDRCoreBundle:Core:index.html.twig", array(
+            "sessionsAsGm" => $sessionsAsGm,
+            "sessionsAsPlayer" => $sessionsAsPlayer
+        ));
     }
 
     /**
@@ -74,16 +80,6 @@ class CoreController extends Controller
         }
         return new Response(self::$jsonError, 400);
 
-    }
-
-    public function acceptInvitationAction(Request $request)
-    {
-        if ($request->isXmlHttpRequest()) {
-            $idUser = $this->get('security.token_storage')->getToken()->getUser()->getId();
-            return new JsonResponse($idUser);
-        }
-
-        return new Response(self::$jsonError, 400);
     }
 
 

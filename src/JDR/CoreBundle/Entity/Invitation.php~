@@ -31,10 +31,10 @@ class Invitation
     private $statut;
 
     /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="JDR\UserBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
-     */
+ * @var User
+ * @ORM\ManyToOne(targetEntity="JDR\UserBundle\Entity\User")
+ * @ORM\JoinColumn(nullable=false)
+ */
     private $player;
 
     /**

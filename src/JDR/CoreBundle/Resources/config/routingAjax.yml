@@ -4,17 +4,6 @@ jdr_core_ajax_username:
         _controller: JDRCoreBundle:Core:username
         methods: [post]
 
-jdr_core_ajax_remove_stat_session:
-    path: /remove-stat
-    defaults:
-        _controller: JDRCoreBundle:Session:removeStat
-        metthods: [post]
-
-jdr_core_ajax_add_stat_session:
-    path: /add-stat
-    defaults:
-        _controller: JDRCoreBundle:Session:addStat
-        methods: [post]
 
 jdr_core_ajax_send_invitation:
     path: /add-player
@@ -28,11 +17,6 @@ jdr_core_ajax_find_invitation:
         _controller: JDRCoreBundle:Invitation:findInvitations
         methods: [post]
 
-jdr_core_ajax_cancel_invitation:
-    path: /cancel-invit
-    defaults:
-        _controller: JDRCoreBundle:Invitation:cancelInvitation
-        methods: [post]
 
 jdr_core_ajax_remove_player:
     path: /remove-player
@@ -49,5 +33,5 @@ jdr_core_ajax_send_again:
 jdr_core_ajax_accept_invitation:
     path: /accept
     defaults:
-        _controller: JDRCoreBundle:Core:acceptInvitation
+        _controller: JDRCoreBundle:Invitation:acceptInvitation
         methods : [post]

@@ -23,15 +23,15 @@
     </head>
     <body>
         <form class="form-signin" action="{{ path("fos_user_security_check") }}" method="post">
-            <h2 class="form-signin-heading">Indentifiez-vous</h2>
+            <h2 class="form-signin-heading">Identifiez-vous</h2>
             {% if csrf_token %}
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
             {% endif %}
 
-            <label for="username" class="sr-only">{{ 'security.login.username'|trans }}</label>
+            <label for="username" class="sr-only">Nom d'utilisateur</label>
             <input type="text" id="username" class = "form-control" name="_username" value="{{ last_username }}" required autofocus/>
 
-            <label for="password" class="sr-only">{{ 'security.login.password'|trans }}</label>
+            <label for="password" class="sr-only">Mot de passe</label>
             <input type="password" id="password" class = "form-control" name="_password" required />
 
             <label for="remember_me">Se souvenir de moi</label>

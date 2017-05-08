@@ -257,7 +257,9 @@ class Session
     }
 
     /**
-     * Get playersCharacters     *
+     * Get playersCharacters
+     *
+     * @return string
      */
     public function getPlayersCharacters()
     {
@@ -274,7 +276,6 @@ class Session
     public function addPlayersCharacter(\JDR\CoreBundle\Entity\PlayerCharacter $playersCharacter)
     {
         $this->playersCharacters[] = $playersCharacter;
-        $playersCharacter->setSession($this);
 
         return $this;
     }
@@ -287,6 +288,5 @@ class Session
     public function removePlayersCharacter(\JDR\CoreBundle\Entity\PlayerCharacter $playersCharacter)
     {
         $this->playersCharacters->removeElement($playersCharacter);
-        $playersCharacter->setSession(null);
     }
 }

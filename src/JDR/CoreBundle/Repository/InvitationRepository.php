@@ -32,17 +32,17 @@ class InvitationRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Retourne l'invitation qui possède les paramètres saisis
      */
-    public function select($playerName, $idSession){
+    public function findByNameAndIdSession($playerName, $idSession){
         return $this->getEntityManager()
             ->createQueryBuilder()
             ->select('i')
             ->from('JDRCoreBundle:Invitation', 'i')
             ->innerJoin('i.player', 'p')
-            ->innerJoin('i.session','s')
-            ->where('s.id = :session_id')
-            ->andWhere('p.username = :username')
-            ->setParameter('session_id', $idSession)
+            ->innerJoin('i.session', 's')
+            ->where('p.username = :username')
+            ->andWhere('s.id = :session_id')
             ->setParameter('username', $playerName)
+            ->setParameter('session_id', $idSession)
             ->getQuery()
             ->getSingleResult();
     }
@@ -51,15 +51,17 @@ class InvitationRepository extends \Doctrine\ORM\EntityRepository
      * Renvoie toutes les sessions où l'utilisateur a reçu des invitations
      * Revnoie le nom de la session, l'id de l'inviation et l'id de la session
      */
-    public function findSessions($playerId){
+    public function findSessionsInvit($playerId){
         return $this->getEntityManager()
             ->createQueryBuilder()
-            ->select("s.name, i.id, s.id")
+            ->select("s.name, i.id")
             ->from("JDRCoreBundle:Invitation", 'i')
             ->innerJoin('i.player', 'p')
             ->innerJoin('i.session', 's')
             ->where('p.id = :player_id')
+            ->andWhere('i.statut = :statut')
             ->setParameter('player_id', $playerId)
+            ->setParameter('statut', 'wait')
             ->getQuery()
             ->getResult();
     }

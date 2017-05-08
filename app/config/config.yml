@@ -41,6 +41,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        js_vars: "@acme.js_vars"
 
 # Doctrine Configuration
 doctrine:
@@ -79,3 +81,7 @@ fos_user:
     from_email:
         address: test@test.com
         sender_name: Test
+
+assetic:
+    debug: '%kernel.debug%'
+    use_controller: '%kernel.debug%'

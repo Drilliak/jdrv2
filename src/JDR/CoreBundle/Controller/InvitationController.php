@@ -77,52 +77,16 @@ class InvitationController extends Controller
             $repository = $em->getRepository('JDRCoreBundle:Invitation');
 
             $idUser = $request->get('idUser');
-            $invitations = $repository->findSessions($idUser);
-            $nbInvitations = count($invitations);
+            $sessionsInvit = $repository->findSessionsInvit($idUser);
+            $nbSessionsInv = count($sessionsInvit);
             $res = [
-                'invitations'   => $invitations,
-                'nbInvitations' => $nbInvitations
+                'sessionsInvit'   => $sessionsInvit,
+                'nbSessionsInvit' => $nbSessionsInv
             ];
             return new JsonResponse($res);
-        }
+       }
         return new Response(self::$ajaxError, 400);
     }
-
-    /**
-     * retire l'invitation envoyé au joueur
-     */
-    public function cancelInvitationAction(Request $request)
-    {
-        if ($request->isXmlHttpRequest()) {
-            $em = $this->getDoctrine()->getManager();
-            $repository = $em->getRepository('JDRCoreBundle:Invitation');
-
-            $playerName = $request->get('playerName');
-            $idSession = $request->get('idSession');
-            $invitation = $repository->select($playerName, $idSession);
-
-            $em->remove($invitation);
-            $em->flush();
-            return new JsonResponse('success');
-
-        }
-        return new Response(self::$ajaxError, 400);
-    }
-
-    /**
-     * Retire l'invitation envoyé au joueur et supprime le joueur de la partie
-     */
-    public function removePlayerAction(Request $request)
-    {
-        if ($request->isXmlHttpRequest()) {
-            // On retire l'invitation
-            $this->cancelInvitationAction($request);
-
-            // TODO Retirer l'utilisateur de la session
-        }
-        return new Response(self::$ajaxError, 400);
-    }
-
 
     /**
      * Renvoie l'invitation au joueur
@@ -143,5 +107,27 @@ class InvitationController extends Controller
         }
 
         return new Response(self::$ajaxError, 400);
+    }
+
+    /**
+     * Méthode qui passe l'invitation a l'état accepté et qui ajoute le joueur l'ayant accepté dans la partie susdite
+     */
+    public function acceptInvitationAction(Request $request){
+
+        //if ($request->isXmlHttpRequest()) {
+            $idInvitation = $request->get('idInvitation');
+            $newStatut = $request->get('newStatut');
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('JDRCoreBundle:Invitation');
+            $invitation = $repository->find($idInvitation);
+            $invitation->setStatut($newStatut);
+            $session = $invitation->getSession();
+            $session->addUser($this->get('security.token_storage')->getToken()->getUser());
+            $invitation->setSession($session);
+            $em->flush();
+            return new JsonResponse('success');
+     //   }
+
+        return new Response(self::$ajaxError,400);
     }
 }

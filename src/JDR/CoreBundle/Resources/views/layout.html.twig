@@ -17,7 +17,7 @@
         <link href="{{ asset('bootstrap-3.3.7-dist/css/bootstrap.min.css') }}" rel="stylesheet">
 
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <link href="http://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+        {#<link href="http://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">#}
 
 
         <!-- Custom styles for this template -->
@@ -38,7 +38,7 @@
 <body>
 {% block header %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
+        <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
@@ -82,6 +82,9 @@
             </div>
         </div>
     </nav>
+
+    {# Variables passées du contrôleur au fichier javascript #}
+    <div id="js-vars" data-vars="{{ js_vars|json_encode|e('html_attr') }}"></div>
 {% endblock %}
 
 {% block body %}
@@ -92,7 +95,6 @@
 {% block javascript %}
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ asset('bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/notification/jquery.toaster.js') }}"></script>
     <script>
         $(document).ready(function () {
             (function updateInvitations() {
@@ -102,16 +104,16 @@
                         idUser: {{ app.user.id }}
                     },
                     function (data) {
-                        $("#nb-invitations").text(data.nbInvitations);
+                        $("#nb-invitations").text(data.nbSessionsInvit);
                         let items = [];
-                        for (let invitation of data.invitations) {
+                        for (let sessionInvit of data.sessionsInvit) {
                             items.push(
-                                '<li id =" + invitation.id + " class="invitations">' +
-                                '<a href="#">' +
-                                invitation.name +
-                                '<div>' +
-                                ' <span id="accept-invitation" class="glyphicon glyphicon-ok" style="margin-right: 5px"></span> ' +
-                                ' <span class="glyphicon glyphicon-remove"></span> ' +
+                                '<li id ="' + sessionInvit.id + '" class="invitations">' +
+                                '<a href="#" >' +
+                                sessionInvit.name +
+                                '<div">' +
+                                ' <a href="#" id="accept-invitation"><span class="glyphicon glyphicon-ok"></span></a>' +
+                                ' <a href="#"><span class="glyphicon glyphicon-remove"></span></a>' +
                                 '</div>' +
                                 '</a>' +
                                 '</li>'
@@ -121,12 +123,30 @@
                     },
                     'json'
                 );
-                setTimeout(updateInvitations, 1000);
+                setTimeout(updateInvitations, 5000);
             })();
 
-            $("#accept-invitation").on("click", function(){
-                console.log('coucou')
+            // Désactive les liens de l'onglet invitations (ils ne doivent pas
+            // rediriger vers une page)
+            // TODO Distinguer acceptation et refus (pour l'instant, un click accepte forcément l'invitation)
+            $("#invitations-menu").on("click", "a#accept-invitation", function () {
+                let invitationId = $(this).parent().attr('id');
+                let nbInvistations = $("#nb-invitations");
+                nbInvistations.text(nbInvistations.text() -1);
+                // On passe l'inviation à l'état "accepted"
+                $.post(
+                    "{{ path('jdr_core_ajax_accept_invitation') }}",
+                    {
+                        idInvitation: invitationId,
+                        newStatut: "accepted"
+                    },
+                    function (data) {
+
+                    },
+                    'json'
+                );
             });
+
         });
     </script>
 

@@ -11,225 +11,130 @@
 {% block body %}
     <div id="flashbag">
         {% for message in app.session.flashbag.get('newSession') %}
-            <p>{{ message }}</p>
+            <div class="alert alert-success alert-dismissible">
+                <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></span>
+                {{ message }}
+            </div>
         {% endfor %}
     </div>
 
-    <h2>Partie {{ name }}</h2>
-
-    <h3>Caractéristiques autorisées</h3>
-    {% set actualStats = '' %}
-    {% for allowedStat in allowedStats %}
-        {% set actualStats = actualStats ~ allowedStat ~ ',' %}
-    {% endfor %}
-    <input type="text" data-role="tagsinput" value="{{ actualStats }}"/>
-
-
-    <h3>Participants</h3>
-    <table id="participants">
-        <tr>
-            <td>Utilisateur</td>
-            <td>État</td>
-        </tr>
-        {% for invitation in invitations %}
-            {% if invitation.statut == "wait" %}
-                {% set msg = '<tr id ="' ~ invitation.username ~ '"><td>' ~ invitation.username ~ '</td> <td>En attente</td> <td><button class="cancelinvitation">Annuler l\'invitation</button></td></tr>' %}
-            {% endif %}
-            {% if invitation.statut == "accepted" %}
-                {% set msg = '<tr id="' ~  invitation.username  ~ '"><td>' ~ invitation.username  ~ '</td> <td>Accepté</td> <td><button class="removePlayer">Retirer le joueur</button></td></tr>' %}
-            {% endif %}
-            {% if invitation.statut == "denied" %}
-                {% set msg = '<tr id="' ~  invitation.username  ~ '"><td>' ~ invitation.username  ~ '</td> <td>Refusé</td> <td><button class="sendagain">Renvoyer l\'invitation</button></td>/tr>' %}
-            {% endif %}
-            {{ msg|raw }}
-        {% endfor %}
-    </table>
-
-
-    <label for="users">Ajouter un joueur : </label><input type="text" id="users" name="_users"/>
-
-    <button id="opener">Supprimer la partie</button>
-    <div id="error"></div>
-
-    {# Contenu de la fenêtre popup #}
-    <div id="dialog" title="Suppression de la partie">
-        Êtes-vous sûr(e) de vouloir supprimer la partie ? Cette action sera définitive.
+    <div class="row">
+        <div class="page-header">
+            <h2>Partie {{ name }}</h2>
+        </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <span class="row">
+                <h3 class="pull-left">Description</h3>
+                <a id="save-description" class="btn btn-info btn-sm pull-right">Sauvegarder</a>
+            </span>
+            <div class="form-group">
+                <textarea id="description" class="form-control" rows="5">{{ desciption }}</textarea>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-6 col-sm-offset-3" style>
+
+            <h3>Caractéristiques autorisées</h3>
+
+            {% set actualStats = '' %}
+            {% for allowedStat in allowedStats %}
+                {% set actualStats = actualStats ~ allowedStat ~ ',' %}
+            {% endfor %}
+
+            <input id="allowed-stats" type="text" data-role="tagsinput" class="form-control input-lg"
+                   value="{{ actualStats }}"/>
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+
+    </div>
+
+
+    <div id="error" class="alert alert-danger fade in" style="display: none;"></div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix row" style="margin: 0;">
+                    <h4 class="panel-title col-xs-3" style="padding-top: 7px;">Participants</h4>
+                    <div class="input-group col-xs-offset-7">
+                        <input type="text" class="form-control" id="users" placeholder="Ajouter un utilisateur">
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>État</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="participants">
+                    {% for invitation in invitations %}
+                        {% if invitation.statut == "wait" %}
+                            {% set msg = '<tr id ="' ~ invitation.username ~ '"><td>' ~ invitation.username ~ '</td> <td>En attente</td> <td><a class="btn btn-primary cancel-invitation">Annuler l\'invitation</a></td></tr>' %}
+                        {% endif %}
+                        {% if invitation.statut == "accepted" %}
+                            {% set msg = '<tr id="' ~  invitation.username  ~ '"><td>' ~ invitation.username  ~ '</td> <td>Accepté</td> <td><a class="btn btn-primary remove-player">Retirer le joueur</a></td></tr>' %}
+                        {% endif %}
+                        {% if invitation.statut == "denied" %}
+                            {% set msg = '<tr id="' ~  invitation.username  ~ '"><td>' ~ invitation.username  ~ '</td> <td>Refusé</td> <td><a class="btn btn-primary cancel-invitation">Renvoyer l\invitation </a><span class="glyphicon glyphicon-remove" style="margin-left:30px;"></span></td>/tr>' %}
+                        {% endif %}
+                        {{ msg|raw }}
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    {# Bouton supprimer la partie#}
+    <div class="row">
+        <button type="button"
+                class="btn btn-danger btn-lg col-lg-offset-5 col-lg-2 col-sm-4 col-sm-offset-4 col-xs-offset-3 col-xs-6"
+                data-toggle="modal" data-target="#myModal" style="margin-bottom: 30px;">Supprimer la partie
+        </button>
+    </div>
+
+    {# Feneêtre de suppression de la partie #}
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Supprimer la partie</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous vraiment supprimer cette partie ? Cette action sera définitive.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Non</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="js-vars-twig" data-path="{{ app.request.uri }}"
+         data-sendinvitationpath="{{ path('jdr_core_ajax_send_invitation') }}"
+         data-autocompletepath="{{ path('jdr_core_ajax_username') }}"></div>
+
 
 {% endblock %}
     {% block javascript %}
         {{ parent() }}
         <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap-taginput/bootstrap-tagsinput.js') }}"></script>
-        <script>
-            function removeSession() {
-                $("#dialog").dialog({
-                    autoOpen: false,
-                    modal: true,
-                    buttons: [
-                        {
-                            text: "Oui",
-                            click: function () {
-                                $(location).attr('href', "{{ path('jdr_core_session_destroy', {'id': id }) }}");
-                            }
-                        },
-                        {
-                            text: 'Non',
-                            click: function () {
-                                $(this).dialog('close');
-                            }
-                        }
-                    ]
-                });
-                $("#opener").click(function () {
-                    $("#dialog").dialog("open");
-                });
-            }
-
-
-            function addItem(event, idSession) {
-                $.post(
-                    "{{ path('jdr_core_ajax_add_stat_session') }}",
-                    {
-                        stat: event.item,
-                        idSession: idSession
-                    },
-                    function (data) {
-
-                    },
-                    'json'
-                );
-
-            }
-
-            function removeItem(event, idSession) {
-                $.post(
-                    "{{ path('jdr_core_ajax_remove_stat_session') }}",
-                    {
-                        stat: event.item,
-                        idSession: idSession
-                    },
-                    function (data) {
-
-                    },
-                    'json'
-                );
-            }
-
-            function sendInvit(ui, idSession) {
-                $.post(
-                    "{{ path('jdr_core_ajax_send_invitation') }}",
-                    {
-                        idSession: idSession,
-                        playerName: ui.item.value
-                    },
-                    function (data) {
-                    },
-                    'json'
-                );
-            }
-
-
-        </script>
-        <script>
-
-            $(document).ready(function () {
-
-                // Actions sur le champ des caractéristiques autorisées
-                $('input').on('itemAdded', function (event) {
-                    addItem(event, {{ id }});
-                });
-                $('input').on('itemRemoved', function (event) {
-                    removeItem(event, {{ id }});
-                });
-
-                /************* Actions sur les boutons des participants ***********/
-
-                // Annuler l'invitation
-                $("tr").on("click", "button.cancelinvitation", function () {
-                    trElement = $(this).parent().parent();
-                    trElement.remove();
-                    $.post(
-                        "{{ path('jdr_core_ajax_cancel_invitation') }}",
-                        {
-                            playerName: trElement.attr('id'),
-                            idSession: {{ id }}
-                        },
-                        function (data) {
-
-                        },
-                        'json'
-                    );
-
-                });
-
-
-                // Supprimer le joueur
-                $("tr").on("click", "button.removePlayer", function () {
-                    trElement = $(this).parent().parent();
-                   trElement.remove();
-                    $.post(
-                        "{{ path('jdr_core_ajax_cancel_invitation') }}",
-                        {
-                            playerName: trElement.attr('id'),
-                            idSession: {{ id }}
-                        },
-                        function (data) {
-
-                        },
-                        'json'
-                    );
-
-                });
-
-                // TODO Ajout de la suppression d'une ivnitation lors du click sur la croix (pas encore définie) à côté d'une invitation refusée.
-
-                // Renvoyer l'invitation
-                $("tr").on("click", "button.sendagain", function () {
-                    trElement = $(this).parent().parent();
-                    playerName = trElement.attr('id');
-                    trElement.html('<td>' + playerName + '</td>' + '<td>En attente</td> <td><button class="cancelinvitation">Annuler l\'invitation</button></td>');
-                    $.post(
-                        " {{ path('jdr_core_ajax_send_again') }}",
-                        {
-                            playerName: playerName,
-                            idSession: {{ id }}
-                        },
-                        function (data) {
-
-                        },
-                        'json'
-                    );
-
-                });
-
-
-                /**************    Action sur le champ d'ajout de joueur *************/
-                $("#users").autocomplete({
-                    source: "{{ path('jdr_core_ajax_username') }}",
-
-                    select: function (event, ui) {
-                        if (!$("#" + ui.item.value).length) {
-                            $("#participants").append('<tr id="' + ui.item.value + '"><td>' + ui.item.value + '</td> <td>En attente</td> <td><button class="cancelinvitation">Annuler l\'invitation</button></td></tr>');
-                            sendInvit(ui, {{ id }});
-                        } else {
-                            $("#error").html('<p>Une invitation a déjà été envoyée à ce joueur</p>');
-                            $("#error").show();
-                            setTimeout(function () {
-                                $("#error").hide(1000);
-                                $("#error").val('');
-                            }, 5000);
-                        }
-
-                        ui.item.value = "";
-                    }
-                });
-
-
-                // Action sur le bouton de suppression de partie
-                removeSession();
-
-                // TODO Actualisation données en temps réel
-            });
-        </script>
+        <script src="{{ asset('js/JDR/CoreBundle/Session/edit_session_main.js') }}"></script>
     {% endblock %}

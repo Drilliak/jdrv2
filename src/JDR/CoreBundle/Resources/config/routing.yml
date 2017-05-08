@@ -10,11 +10,14 @@ jdr_core_session_destroy:
         _controller: JDRCoreBundle:Session:removeSession
 
 jdr_core_game_edition:
-    path: /partie/mj/{id}
+    path: /partie/mj/{idSession}
     defaults:
         _controller: JDRCoreBundle:Session:editSession
 
-
+jdr_core_game_player_menu:
+    path: /partie/joueur/{idSession}
+    defaults:
+        _controller: JDRCoreBundle:Session:player
 jdr_core_ajax:
     resource: "@JDRCoreBundle/Resources/config/routingAjax.yml"
     prefix:   /ajax

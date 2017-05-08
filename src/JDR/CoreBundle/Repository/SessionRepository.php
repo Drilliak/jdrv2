@@ -16,51 +16,34 @@ class SessionRepository extends \Doctrine\ORM\EntityRepository
 {
 
     /**
-     * Renvoie les sessions dont le mj a l'id $idGM
-     *
-     * @param $idGm id du maitre du jeu
-     * @param array|null $parameters tableau des champs de la session a récupérer. Si le tableau n'est pas spécifié
-     * (ou égal à null), renvoie tous les champs
-     * @return array contenant les sessions
+     * Renvoie les informations permettant l'affichage des sessions
      */
-    public function selectSessionAsGm($idGm, array $parameters = null)
-    {
-        // Si aucun paramètre n'est rentré, on retourne toute la ligne
-        if ($parameters == null) {
-            $query = $this->_em->createQuery("SELECT s FROM JDRCoreBundle:Session s JOIN s.gameMaster g WHERE g.id = :id");
-            $query->setParameter('id', $idGm);
-        } else {
-            $strQuery = "SELECT ";
-            for ($i = 0; $i < count($parameters); $i++) {
-                if ($i == count($parameters) - 1) {
-                    $strQuery .= 's.' . $parameters[$i] . ' ';
-                } else {
-                    $strQuery .= 's.' . $parameters[$i] . ', ';
-                }
-
-            }
-            $strQuery .= " FROM JDRCoreBundle:Session s JOIN s.gameMaster g WHERE g.id = :id";
-
-            $query = $this->_em->createQuery($strQuery);
-            $query->setParameter('id', $idGm);
-        }
-
-        return $query->getResult();
+    public function showSessionsAsGm($idUser){
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('s.date, s.description, s.name, s.id')
+            ->from('JDRCoreBundle:Session', 's')
+            ->innerJoin('JDRUserBundle:User', 'u')
+            ->where('u.id = :idUser')
+            ->setParameter('idUser', $idUser)
+            ->orderBy('s.date', 'DESC')
+            ->getQuery()
+            ->getResult();
 
     }
 
-    public function selectGM($sessionId)
-    {
-        $query = $this->_em->createQuery("SELECT s FROM JDRCoreBundle:Session s WHERE s.id = :id");
-        $query->setParameter('id', $sessionId);
-
-        $sessions = $query->getResult();
-        if (count($sessions) == 1) {
-            return $sessions[0]->getGameMaster();
-        }
-        return new User();
-
+    public function showSessionAsPlayer($idUser){
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('s.date, s.description, s.name, s.id')
+            ->from('JDRCoreBundle:Session', 's')
+            ->innerJoin('s.users', 'u')
+            ->where('u.id = :idUser')
+            ->setParameter('idUser', $idUser)
+            ->getQuery()
+            ->getResult();
     }
+
 
     public function selectSession($sessionID, array $parameters = null)
     {
